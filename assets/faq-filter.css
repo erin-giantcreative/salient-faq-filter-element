@@ -1,0 +1,123 @@
+/**
+ * FAQ Filter element styles
+ * Intentionally minimal and “Salient-friendly”.
+ * No global overrides; everything is scoped to .sffe-faq-filter
+ */
+
+.sffe-faq-filter {
+  width: 100%;
+}
+
+.sffe-faq-filter__top {
+  margin-bottom: 18px;
+}
+
+.sffe-faq-filter__control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sffe-faq-filter__label {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.sffe-faq-filter__select {
+  min-width: 240px;
+  max-width: 100%;
+}
+
+.sffe-faq-filter__status {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* Current category title area (line - title - line like your screenshot) */
+.sffe-faq-filter__current {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.sffe-faq-filter__line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: rgba(0,0,0,0.12);
+}
+
+.sffe-faq-filter__title {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* Accordion */
+.sffe-accordion__item {
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  padding: 0;
+}
+
+.sffe-accordion__question {
+  margin: 0;
+}
+
+.sffe-accordion__toggle {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  padding: 18px 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.sffe-accordion__toggle:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.sffe-accordion__qtext {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Simple chevron using CSS (no icon font dependency) */
+.sffe-accordion__icon {
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 180ms ease;
+  opacity: 0.8;
+}
+
+/* Expanded state */
+.sffe-accordion__toggle[aria-expanded="true"] .sffe-accordion__icon {
+  transform: rotate(-135deg);
+}
+
+.sffe-accordion__panel {
+  padding: 0 0 18px 0;
+}
+
+.sffe-accordion__answer {
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.sffe-faq-filter__empty {
+  padding: 18px 0;
+}
