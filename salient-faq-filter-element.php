@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Salient - FAQ Filter (WPBakery Element)
  * Description: WPBakery element for Salient that displays FAQ CPT posts with a category dropdown filter, AJAX loading, caching, and FAQPage schema.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Giant Creative Inc
  *
  * @package Salient_FAQ_Filter_Element
@@ -29,7 +29,7 @@ if (!class_exists('Salient_FAQ_Filter_Element')) {
 		/**
 		 * Plugin version.
 		 */
-		const VERSION = '1.0.0';
+		const VERSION = '1.0.1';
 
 		/**
 		 * Shortcode tag.
@@ -64,9 +64,6 @@ if (!class_exists('Salient_FAQ_Filter_Element')) {
 
 			// WPBakery mapping (safe even if WPBakery is not installed).
 			add_action('vc_before_init', array(__CLASS__, 'register_wpbakery_element'));
-
-			// Conditionally enqueue assets (only when shortcode is actually rendered).
-			add_action('wp_enqueue_scripts', array(__CLASS__, 'maybe_enqueue_assets'));
 
 			// AJAX endpoints for logged-in + logged-out users.
 			add_action('wp_ajax_sffe_get_faqs', array(__CLASS__, 'ajax_get_faqs'));
@@ -138,6 +135,42 @@ if (!class_exists('Salient_FAQ_Filter_Element')) {
 			return $options;
 		}
 
+    /**
+     * Enqueue CSS/JS only when the shortcode is rendered.
+     *
+     * This is the most reliable approach because wp_enqueue_scripts runs
+     * before the_content/shortcodes execute.
+     *
+     * @return void
+     */
+    private static function enqueue_assets() {
+      $plugin_url = plugin_dir_url(__FILE__);
+
+      wp_register_style(
+        self::STYLE_HANDLE,
+        $plugin_url . 'assets/faq-filter.css',
+        array(),
+        self::VERSION
+      );
+
+      wp_register_script(
+        self::SCRIPT_HANDLE,
+        $plugin_url . 'assets/faq-filter.js',
+        array(),
+        self::VERSION,
+        true
+      );
+
+      wp_enqueue_style(self::STYLE_HANDLE);
+      wp_enqueue_script(self::SCRIPT_HANDLE);
+
+      // Provide AJAX URL + nonce to the script.
+      wp_localize_script(self::SCRIPT_HANDLE, 'SFFE_FAQ_FILTER', array(
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('sffe_faq_filter_nonce'),
+      ));
+    }
+
 		/**
 		 * Conditionally enqueue assets.
 		 *
@@ -195,6 +228,7 @@ if (!class_exists('Salient_FAQ_Filter_Element')) {
 		 */
 		public static function render_shortcode($atts) {
 			self::$did_render = true;
+      self::enqueue_assets();
 
 			$atts = shortcode_atts(array(
 				'heading'      => '',
